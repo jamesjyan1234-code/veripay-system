@@ -368,7 +368,7 @@ function setStoredNotifications(notifs) {
 // =========================================================================
 const EMAILJS_CONFIG = {
     publicKey: "2ODRdaC0DQxNfMBab",
-    serviceId: "service_pdcen1w",
+    serviceId: "service_smaqcah",
     templateId: "template_x8s92uj"
 };
 
@@ -398,14 +398,16 @@ function isEmailJsConfigured() {
 
 async function sendRealEmailViaEmailJS({ toEmail, toName, subject, message, otpCode }) {
     if (!toEmail || !toEmail.includes('@')) {
-        return { sent: false, reason: 'invalid_email' };
+        return { sent: false, reason: 'Invalid email address.' };
     }
     const cfg = getEmailJsConfig();
+    if (typeof emailjs === 'undefined') {
+        return { sent: false, reason: 'EmailJS SDK failed to load. Check internet connection or ad-blocker.' };
+    }
     if (!isEmailJsConfigured()) {
-        return { sent: false, reason: 'not_configured' };
+        return { sent: false, reason: 'EmailJS keys are not configured.' };
     }
     try {
-        emailjs.init({ publicKey: cfg.publicKey });
         const templateParams = {
             to_email: toEmail,
             email: toEmail,
@@ -415,12 +417,15 @@ async function sendRealEmailViaEmailJS({ toEmail, toName, subject, message, otpC
             otp_code: otpCode || "",
             app_name: "VeriPay Payroll System"
         };
-        const res = await emailjs.send(cfg.serviceId, cfg.templateId, templateParams);
+        const res = await emailjs.send(cfg.serviceId, cfg.templateId, templateParams, {
+            publicKey: cfg.publicKey
+        });
         console.log("EmailJS sent successfully:", res.status, res.text);
         return { sent: true, status: res.status };
     } catch (err) {
         console.error("EmailJS send error:", err);
-        return { sent: false, reason: (err && (err.text || err.message)) || 'send_failed' };
+        const reason = (err && (err.text || err.message)) || 'Failed to send email via EmailJS.';
+        return { sent: false, reason };
     }
 }
 
