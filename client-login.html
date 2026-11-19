@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Client Sign In & Registration - VeriPay Portal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 via-slate-50 to-sky-100 min-h-screen flex flex-col justify-between text-slate-800">
+
+    <!-- Header bar -->
+    <header class="py-4 px-6 border-b border-slate-200 bg-white/80 backdrop-blur-md sticky top-0 z-30">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            <a href="index.html" class="flex items-center space-x-2.5">
+                <div class="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center text-white shadow-md shadow-blue-500/20">
+                    <i class="fa-solid fa-mug-saucer"></i>
+                </div>
+                <div>
+                    <span class="text-xl font-black text-slate-900 tracking-tight">Veri<span class="text-blue-600">Pay</span></span>
+                    <span class="text-[10px] bg-blue-100 text-blue-700 font-bold px-1.5 py-0.5 rounded ml-1">Client Portal</span>
+                </div>
+            </a>
+            <div class="flex items-center space-x-3 text-xs">
+                <a href="index.html" class="text-slate-600 hover:text-blue-600 font-semibold transition">Back to Main Website</a>
+                <span class="text-slate-300">|</span>
+                <a href="admin-login.html" class="text-slate-500 hover:text-slate-800 transition flex items-center">
+                    <i class="fa-solid fa-user-shield mr-1"></i> Admin Staff Login
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Login / Register Area -->
+    <main class="flex-grow flex items-center justify-center p-4 py-10">
+        <div class="w-full max-w-md bg-white rounded-3xl shadow-xl border border-slate-200 p-8 relative overflow-hidden">
+            <!-- Client badge accent -->
+            <div class="h-2 w-full bg-gradient-to-r from-blue-500 to-sky-400 absolute top-0 left-0"></div>
+
+            <!-- Tab Switcher -->
+            <div class="flex border-b border-slate-200 mb-6 text-sm font-semibold">
+                <button id="tabLoginBtn" onclick="switchTab('login')" class="flex-1 py-3 border-b-2 border-blue-600 text-blue-600 transition">
+                    Coffee Shop Sign In
+                </button>
+                <button id="tabRegisterBtn" onclick="switchTab('register')" class="flex-1 py-3 border-b-2 border-transparent text-slate-400 hover:text-slate-700 transition">
+                    New Café Register
+                </button>
+            </div>
+
+            <!-- Form: CLIENT SIGN IN -->
+            <div id="loginFormContainer" class="space-y-4">
+                <div class="text-center mb-4">
+                    <h2 class="text-2xl font-black text-slate-900">Welcome Back</h2>
+                    <p class="text-xs text-slate-500 mt-1">Sign in to share your payroll files and download final audit reports.</p>
+                </div>
+
+                <div id="loginErrorMsg" class="hidden p-3 rounded-xl bg-red-50 text-red-700 text-xs border border-red-200"></div>
+
+                <form onsubmit="handleClientLogin(event)" class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Registered Email Address</label>
+                        <div class="relative">
+                            <i class="fa-regular fa-envelope absolute left-3.5 top-3 text-slate-400 text-sm"></i>
+                            <input type="email" id="loginEmail" required value="owner@kapenicj.ph" class="w-full text-xs pl-10 pr-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-blue-500 font-medium">
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="flex items-center justify-between mb-1">
+                            <label class="text-xs font-bold text-slate-700">Password</label>
+                            <span class="text-[11px] text-slate-400">Default: <strong class="text-slate-700 font-mono">client</strong></span>
+                        </div>
+                        <div class="relative">
+                            <i class="fa-solid fa-lock absolute left-3.5 top-3 text-slate-400 text-sm"></i>
+                            <input type="password" id="loginPassword" required value="client" class="w-full text-xs pl-10 pr-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-blue-500">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl text-xs shadow-lg shadow-blue-500/20 transition transform hover:-translate-y-0.5">
+                        Sign In to Client Portal
+                    </button>
+                </form>
+
+                <!-- Quick Test Preset -->
+                <div class="pt-4 border-t border-slate-100">
+                    <p class="text-[11px] text-slate-400 font-semibold mb-2">QUICK DEMO CLIENT ACCOUNT:</p>
+                    <button onclick="fillDemo('owner@kapenicj.ph', 'client')" class="w-full text-left p-2.5 rounded-xl bg-slate-50 hover:bg-blue-50 border border-slate-200 text-xs transition flex items-center justify-between">
+                        <div>
+                            <span class="font-bold text-slate-800">Kape Ni CJ</span>
+                            <span class="text-[10px] text-slate-500 block">owner@kapenicj.ph (Talon Dos, Las Piñas)</span>
+                        </div>
+                        <span class="text-[10px] font-bold text-blue-600">Auto-fill &rarr;</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Form: CLIENT REGISTRATION -->
+            <div id="registerFormContainer" class="hidden space-y-4">
+                <div class="text-center mb-4">
+                    <h2 class="text-2xl font-black text-slate-900">Register Your Café</h2>
+                    <p class="text-xs text-slate-500 mt-1">Join Las Piñas coffee shops getting accurate manual payroll checks.</p>
+                </div>
+
+                <form onsubmit="handleClientRegister(event)" class="space-y-3">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Coffee Shop Name</label>
+                        <input type="text" id="regShopName" required placeholder="e.g. Brew & Beam Coffee" class="w-full text-xs p-2.5 rounded-xl border border-slate-300 focus:outline-blue-500">
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Owner / Manager</label>
+                            <input type="text" id="regOwnerName" required placeholder="Full Name" class="w-full text-xs p-2.5 rounded-xl border border-slate-300 focus:outline-blue-500">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Barangay (Las Piñas)</label>
+                            <select id="regBarangay" class="w-full text-xs p-2.5 rounded-xl border border-slate-300 focus:outline-blue-500">
+                                <option value="BF International/CAA">BF International/CAA</option>
+                                <option value="Talon Dos">Talon Dos</option>
+                                <option value="Almanza Uno">Almanza Uno</option>
+                                <option value="Almanza Dos">Almanza Dos</option>
+                                <option value="Pamplona Tres">Pamplona Tres</option>
+                                <option value="Pilar">Pilar</option>
+                                <option value="Pulang Lupa Dos">Pulang Lupa Dos</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Business Email</label>
+                        <input type="email" id="regEmail" required placeholder="manager@yourcoffee.ph" class="w-full text-xs p-2.5 rounded-xl border border-slate-300 focus:outline-blue-500">
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Subscription Plan</label>
+                            <select id="regPlan" class="w-full text-xs p-2.5 rounded-xl border border-slate-300 focus:outline-blue-500">
+                                <option value="Basic Plan (₱2,500)">Basic Plan (₱2,500 - 1-3 Staff)</option>
+                                <option value="Standard Plan (₱3,500)" selected>Standard Plan (₱3,500 - 4-6 Staff)</option>
+                                <option value="Premium Plan (₱5,500)">Premium Plan (₱5,500 - 7-9 Staff)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Payout Schedule</label>
+                            <select id="regSchedule" class="w-full text-xs p-2.5 rounded-xl border border-slate-300 focus:outline-blue-500">
+                                <option value="Semi-Monthly (15th & 30th)" selected>Semi-Monthly (15th & 30th)</option>
+                                <option value="Weekly (Every Friday)">Weekly (Every Friday)</option>
+                                <option value="Monthly (End of Month)">Monthly (Every 30th)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Set Password</label>
+                        <input type="password" id="regPassword" required placeholder="••••••••" class="w-full text-xs p-2.5 rounded-xl border border-slate-300 focus:outline-blue-500">
+                    </div>
+
+                    <button type="submit" class="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl text-xs shadow-lg shadow-blue-500/20 transition">
+                        Register & Enter Portal
+                    </button>
+                </form>
+            </div>
+
+            <!-- Security Notice -->
+            <div class="mt-6 pt-4 border-t border-slate-100 flex items-center space-x-2 text-[11px] text-slate-500">
+                <i class="fa-solid fa-shield-halved text-blue-600"></i>
+                <span>Strict Client Separation: Administrative functions cannot be accessed through this portal.</span>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="py-4 text-center text-xs text-slate-500 border-t border-slate-200 bg-white/50">
+        VeriPay Payroll Outsourcing Service • Vista Mall Las Piñas City • BSBA HRM DFCAM-CLP
+    </footer>
+
+    <script src="shared.js"></script>
+    <script>
+        function switchTab(tab) {
+            const loginBtn = document.getElementById('tabLoginBtn');
+            const regBtn = document.getElementById('tabRegisterBtn');
+            const loginCont = document.getElementById('loginFormContainer');
+            const regCont = document.getElementById('registerFormContainer');
+
+            if (tab === 'login') {
+                loginBtn.className = "flex-1 py-3 border-b-2 border-blue-600 text-blue-600 font-bold transition";
+                regBtn.className = "flex-1 py-3 border-b-2 border-transparent text-slate-400 hover:text-slate-700 transition";
+                loginCont.classList.remove('hidden');
+                regCont.classList.add('hidden');
+            } else {
+                regBtn.className = "flex-1 py-3 border-b-2 border-blue-600 text-blue-600 font-bold transition";
+                loginBtn.className = "flex-1 py-3 border-b-2 border-transparent text-slate-400 hover:text-slate-700 transition";
+                regCont.classList.remove('hidden');
+                loginCont.classList.add('hidden');
+            }
+        }
+
+        function fillDemo(email, pass) {
+            document.getElementById('loginEmail').value = email;
+            document.getElementById('loginPassword').value = pass;
+        }
+
+        function handleClientLogin(e) {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value.trim().toLowerCase();
+            const pass = document.getElementById('loginPassword').value;
+            const errBox = document.getElementById('loginErrorMsg');
+
+            const users = getStoredUsers();
+            const user = users.find(u => u.email.toLowerCase() === email);
+
+            if (!user) {
+                errBox.textContent = "Error: No coffee shop account found with this email.";
+                errBox.classList.remove('hidden');
+                return;
+            }
+
+            // Strictly prevent Admin or Super Admin logins on Client Portal
+            if (user.role !== 'client') {
+                errBox.innerHTML = `
+                    <strong>Access Denied:</strong> This portal is exclusively for coffee shop clients.<br/>
+                    Administrative accounts must use the <a href="admin-login.html" class="underline font-bold">VeriPay Admin Security Portal &rarr;</a>
+                `;
+                errBox.classList.remove('hidden');
+                return;
+            }
+
+            if (user.password !== pass) {
+                errBox.textContent = "Error: Incorrect password. Please try again.";
+                errBox.classList.remove('hidden');
+                return;
+            }
+
+            // Success
+            user.isOnline = true;
+            user.lastSignIn = new Date().toLocaleString('en-US', { dateStyle: 'short', timeStyle: 'short' });
+            setStoredUsers(users);
+            setSessionUser(user);
+
+            window.location.href = "index.html?portal=client";
+        }
+
+        function handleClientRegister(e) {
+            e.preventDefault();
+            const shopName = document.getElementById('regShopName').value.trim();
+            const ownerName = document.getElementById('regOwnerName').value.trim();
+            const email = document.getElementById('regEmail').value.trim().toLowerCase();
+            const barangay = document.getElementById('regBarangay').value;
+            const plan = document.getElementById('regPlan').value;
+            const schedule = document.getElementById('regSchedule').value;
+            const password = document.getElementById('regPassword').value;
+
+            const users = getStoredUsers();
+            if (users.find(u => u.email.toLowerCase() === email)) {
+                alert("An account with this email already exists. Please sign in instead.");
+                return;
+            }
+
+            let price = 3500;
+            let limit = "4-6 Employees";
+            if (plan.includes('2,500')) { price = 2500; limit = "1-3 Employees"; }
+            if (plan.includes('5,500')) { price = 5500; limit = "7-9 Employees"; }
+
+            const newUser = {
+                id: "USR-" + Math.floor(100 + Math.random() * 900),
+                name: ownerName,
+                email,
+                role: "client",
+                password,
+                title: "Coffee Shop Owner",
+                shopName,
+                barangay,
+                plan,
+                planTier: plan.split(' ')[0] + ' ' + plan.split(' ')[1],
+                planPrice: price,
+                planLimit: limit,
+                schedule,
+                isOnline: true,
+                lastSignIn: "Just now",
+                filesSentCount: 0,
+                reauditFees: 0
+            };
+
+            users.push(newUser);
+            setStoredUsers(users);
+            setSessionUser(newUser);
+
+            alert("Registration successful! Welcome to VeriPay.");
+            window.location.href = "index.html?portal=client";
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VeriPay Staff & Admin Portal - Authorized Access Only</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col justify-between selection:bg-purple-600 selection:text-white">
+
+    <!-- Header bar -->
+    <header class="py-4 px-6 border-b border-slate-800 bg-slate-900/90 backdrop-blur-md sticky top-0 z-30">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            <a href="index.html" class="flex items-center space-x-2.5">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-purple-600 to-indigo-600 flex items-center justify-center text-white shadow-lg shadow-purple-600/30">
+                    <i class="fa-solid fa-shield-halved text-lg"></i>
+                </div>
+                <div>
+                    <span class="text-xl font-black text-white tracking-tight">Veri<span class="text-purple-400">Pay</span></span>
+                    <span class="text-[10px] bg-purple-500/20 text-purple-300 border border-purple-500/30 font-mono font-bold px-1.5 py-0.5 rounded ml-1">Internal Operations</span>
+                </div>
+            </a>
+            <div class="flex items-center space-x-3 text-xs">
+                <a href="index.html" class="text-slate-400 hover:text-white transition">Public Site</a>
+                <span class="text-slate-700">|</span>
+                <a href="client-login.html" class="text-blue-400 hover:text-blue-300 transition flex items-center">
+                    <i class="fa-solid fa-mug-saucer mr-1.5"></i> Client Coffee Shop Login
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Admin Access Area -->
+    <main class="flex-grow flex items-center justify-center p-4 py-12">
+        <div class="w-full max-w-md bg-slate-900 border border-slate-800 rounded-3xl shadow-2xl p-8 relative overflow-hidden">
+            <!-- Glow effect -->
+            <div class="absolute -top-24 -right-24 w-48 h-48 bg-purple-600/20 rounded-full blur-3xl pointer-events-none"></div>
+            <div class="absolute -bottom-24 -left-24 w-48 h-48 bg-blue-600/20 rounded-full blur-3xl pointer-events-none"></div>
+
+            <div class="h-1.5 w-full bg-gradient-to-r from-purple-500 via-indigo-500 to-blue-500 absolute top-0 left-0"></div>
+
+            <div class="text-center mb-6">
+                <div class="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-purple-950/80 border border-purple-800 text-purple-300 text-[11px] font-semibold mb-3">
+                    <i class="fa-solid fa-lock text-xs"></i>
+                    <span>Restricted Personnel Access</span>
+                </div>
+                <h2 class="text-2xl font-black text-white tracking-tight">Admin & Operations Sign In</h2>
+                <p class="text-xs text-slate-400 mt-1">Audit verification queue, account controls, and audit trail monitors.</p>
+            </div>
+
+            <div id="adminErrorMsg" class="hidden p-3 rounded-xl bg-red-950/80 text-red-200 text-xs border border-red-800 mb-4"></div>
+
+            <form onsubmit="handleAdminLogin(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-slate-300 mb-1">Internal Work Email</label>
+                    <div class="relative">
+                        <i class="fa-regular fa-id-badge absolute left-3.5 top-3 text-slate-500 text-sm"></i>
+                        <input type="email" id="adminEmail" required value="nelbert@veripay.ph" placeholder="name@veripay.ph" class="w-full text-xs pl-10 pr-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-white placeholder-slate-600 focus:outline-purple-500">
+                    </div>
+                </div>
+
+                <div>
+                    <div class="flex items-center justify-between mb-1">
+                        <label class="text-xs font-bold text-slate-300">Staff Password</label>
+                        <span class="text-[11px] text-slate-500">Default: <strong class="text-purple-300 font-mono">admin</strong></span>
+                    </div>
+                    <div class="relative">
+                        <i class="fa-solid fa-key absolute left-3.5 top-3 text-slate-500 text-sm"></i>
+                        <input type="password" id="adminPassword" required value="admin" class="w-full text-xs pl-10 pr-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-white placeholder-slate-600 focus:outline-purple-500">
+                    </div>
+                </div>
+
+                <div class="pt-2">
+                    <button type="submit" class="w-full py-3 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-bold rounded-xl text-xs shadow-lg shadow-purple-600/30 transition transform hover:-translate-y-0.5">
+                        Authenticate & Access Console
+                    </button>
+                </div>
+            </form>
+
+            <!-- Quick Demo Credentials for Evaluation -->
+            <div class="mt-6 pt-5 border-t border-slate-800 space-y-2">
+                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Demo Authorized Roles:</p>
+                
+                <button onclick="fillAdminDemo('nelbert@veripay.ph', 'admin')" class="w-full text-left p-2.5 rounded-xl bg-slate-950 hover:bg-slate-800/80 border border-slate-800 text-xs transition flex items-center justify-between">
+                    <div>
+                        <span class="font-bold text-emerald-400 flex items-center">
+                            <i class="fa-solid fa-user-check mr-1.5 text-xs"></i> Nelbert S. De Pedro
+                        </span>
+                        <span class="text-[10px] text-slate-400 block">Operations Officer (Audit Queue)</span>
+                    </div>
+                    <span class="text-[10px] text-purple-400 font-bold">Select &rarr;</span>
+                </button>
+
+                <button onclick="fillAdminDemo('christian@veripay.ph', 'admin')" class="w-full text-left p-2.5 rounded-xl bg-slate-950 hover:bg-slate-800/80 border border-slate-800 text-xs transition flex items-center justify-between">
+                    <div>
+                        <span class="font-bold text-purple-400 flex items-center">
+                            <i class="fa-solid fa-shield-cat mr-1.5 text-xs"></i> Christian Jay Villamor
+                        </span>
+                        <span class="text-[10px] text-slate-400 block">Super Admin & Managing Partner</span>
+                    </div>
+                    <span class="text-[10px] text-purple-400 font-bold">Select &rarr;</span>
+                </button>
+            </div>
+
+            <!-- Notice -->
+            <div class="mt-6 p-3 rounded-xl bg-slate-950 border border-slate-800 text-[11px] text-slate-400 flex items-start space-x-2">
+                <i class="fa-solid fa-circle-info text-purple-400 mt-0.5"></i>
+                <span>Strict Security: Coffee shop client accounts attempting to authenticate here will be rejected immediately.</span>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="py-4 text-center text-xs text-slate-500 border-t border-slate-900 bg-slate-950">
+        VeriPay Security Infrastructure • Internal Personnel Only • Vista Mall Las Piñas City
+    </footer>
+
+    <script src="shared.js"></script>
+    <script>
+        function fillAdminDemo(email, pass) {
+            document.getElementById('adminEmail').value = email;
+            document.getElementById('adminPassword').value = pass;
+        }
+
+        function handleAdminLogin(e) {
+            e.preventDefault();
+            const email = document.getElementById('adminEmail').value.trim().toLowerCase();
+            const pass = document.getElementById('adminPassword').value;
+            const errBox = document.getElementById('adminErrorMsg');
+
+            const users = getStoredUsers();
+            const user = users.find(u => u.email.toLowerCase() === email);
+
+            if (!user) {
+                errBox.textContent = "Error: Admin identity not found in VeriPay personnel directory.";
+                errBox.classList.remove('hidden');
+                return;
+            }
+
+            // Strictly prevent Clients from logging in here
+            if (user.role === 'client') {
+                errBox.innerHTML = `
+                    <strong>Access Denied:</strong> Client coffee shop accounts are unauthorized on this administrative gateway.<br/>
+                    Please use the <a href="client-login.html" class="underline font-bold text-blue-300">Coffee Shop Client Portal &rarr;</a>
+                `;
+                errBox.classList.remove('hidden');
+                return;
+            }
+
+            if (user.password !== pass) {
+                errBox.textContent = "Error: Incorrect administrative credentials.";
+                errBox.classList.remove('hidden');
+                return;
+            }
+
+            // Success
+            user.isOnline = true;
+            user.lastSignIn = new Date().toLocaleString('en-US', { dateStyle: 'short', timeStyle: 'short' });
+            setStoredUsers(users);
+            setSessionUser(user);
+
+            if (user.role === 'superadmin') {
+                window.location.href = "index.html?portal=superadmin";
+            } else {
+                window.location.href = "index.html?portal=admin";
+            }
+        }
+    </script>
+</body>
+</html>
